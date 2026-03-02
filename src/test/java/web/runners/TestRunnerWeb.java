@@ -1,0 +1,29 @@
+package web.runners;
+
+import org.junit.platform.suite.api.*;
+
+import static io.cucumber.junit.platform.engine.Constants.*;
+
+@Suite
+@IncludeEngines("cucumber")
+@SelectClasspathResource("features/web_features")   // folder where .feature files are stored
+@IncludeTags("web")     // only run scenarios tagged @web
+@ConfigurationParameter(
+        key = GLUE_PROPERTY_NAME,
+        value = "web.stepdefinitions, web.hooks"    // need web.hooks to initialize WebDriver
+)
+@ConfigurationParameter(
+        key = PLUGIN_PROPERTY_NAME,
+        value = "pretty," +
+                "html:reports/cucumber-results/webUi_test_report.html," +
+                "json:reports/cucumber-results/webUi_test_report.json"
+)
+
+@ConfigurationParameter(
+        key = FILTER_TAGS_PROPERTY_NAME,
+        value = "not @exclude" // default filter, can be overridden with ./gradlew test -Dcucumber.filter.tags="@api"
+)
+
+public class TestRunnerWeb {
+    // empty, no code needed here, auto runner based on annotations
+}
