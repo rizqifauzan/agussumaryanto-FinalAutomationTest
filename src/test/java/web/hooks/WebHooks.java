@@ -8,7 +8,6 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import web.utils.ConfigReader;
 import web.utils.DriverFactory;
-import java.time.Duration;
 
 public class WebHooks {
 
@@ -17,28 +16,15 @@ public class WebHooks {
     @Before
     public void beforeAllTests() {
         System.out.println("=== Starting WEB scenario ===");
-
         // Initialize driver
         DriverFactory.initDriver();
         driver = DriverFactory.getDriver();
-
-        // Set implicit wait from config
-        driver.manage().timeouts().implicitlyWait(
-                Duration.ofSeconds(
-                        ConfigReader.getIntProperty("implicitWait")
-                )
-        );
-
-        driver.manage().window().maximize();
-
-        // Open base URL from config
+        // Open base URL
         driver.get(ConfigReader.getProperty("baseUrl"));
     }
 
     @After
     public void afterAllTests(Scenario scenario) {
-        System.out.println("=== Ending WEB scenario ===");
-
         // Take screenshot if scenario fails
         if (scenario.isFailed()) {
             final byte[] screenshot = ((TakesScreenshot) driver)
@@ -47,7 +33,7 @@ public class WebHooks {
                     screenshot,"image/png", scenario.getName()
             );
         }
-
         DriverFactory.quitDriver();
+        System.out.println("=== Ending WEB scenario ===");
     }
 }

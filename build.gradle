@@ -32,11 +32,13 @@ dependencies {
     testImplementation 'io.rest-assured:rest-assured:6.0.0'
     testImplementation 'io.rest-assured:json-path:6.0.0' // extract information from API response in json format
     testImplementation 'com.networknt:json-schema-validator:3.0.0' // validate API responses against schema files
+    testImplementation("tools.jackson.core:jackson-core:3.1.0") // parsing & generate for json-schema-validator
     testImplementation 'commons-codec:commons-codec:1.21.0' // to solve vulnerabilities to fix security RestAssured
 
     // Selenium for Web testing
     testImplementation 'org.seleniumhq.selenium:selenium-java:4.41.0' // WebDriver
     testImplementation 'io.github.bonigarcia:webdrivermanager:6.3.3' // WebDriver Manager (auto driver setup)
+    testImplementation("com.fasterxml.jackson.core:jackson-core:2.21.1") // parsing & generate for webdrivermanager
 
     // Allure Cucumber adapter (optional, for a visually appealing allure report)
     testImplementation 'io.qameta.allure:allure-cucumber7-jvm:2.25.0'
@@ -86,16 +88,17 @@ tasks.register('runApiTest', JavaExec) {
     // Run all features in the resources/api_features folder
     args = [
             '--plugin', 'pretty',
-            '--plugin', 'html:reports/cucumber-results/api_test_report.html', // cucumber report
-            '--plugin', 'json:reports/cucumber-results/api_test_report.json', // cucumber report
-            '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm', // build/allure-results --> build/reports
+            '--plugin', 'html:build/reports/cucumber/api_test_report.html', // cucumber report
+            '--plugin', 'json:build/reports/cucumber/api_test_report.json', // cucumber report
+            '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm', // build/allure-results->build/reports/
             '--glue', 'api.stepdefinitions',
-            'src/test/resources/features/api_features',
+            'src/test/resources/features.api_features',
             '--tags', tags
     ]
     standardOutput = System.out
     errorOutput = System.err
-    ignoreExitValue = true as JavaExecSpec   // <- so that gradle doesn't immediately FAIL
+    // to get test fail -> CI fail
+    ignoreExitValue = false
 }
 
 // === Custom Task: Run Web UI Tests ===
@@ -114,14 +117,16 @@ tasks.register("runWebTest", JavaExec) {
     // Run all features in the resources/web_features folder
     args = [
             '--plugin', 'pretty',
-            '--plugin', 'html:reports/cucumber-results/webUi_test_report.html', // cucumber report
-            '--plugin', 'json:reports/cucumber-results/webUi_test_report.json', // cucumber report
-            '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm', // build/allure-results --> build/reports
-            '--glue', 'web',
-            'src/test/resources/features/web_features',
+            '--plugin', 'html:build/reports/cucumber/webUi_test_report.html', // cucumber report
+            '--plugin', 'json:build/reports/cucumber/webUi_test_report.json', // cucumber report
+            '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm', // build/allure-results->build/reports/
+            '--glue', 'web.stepdefinitions',
+            '--glue', 'web.hooks',
+            'src/test/resources/features.web_features',
             '--tags', tags
     ]
     standardOutput = System.out
     errorOutput = System.err
-    ignoreExitValue = true as JavaExecSpec   // <- so that gradle doesn't immediately FAIL
+    // to get test fail -> CI fail
+    ignoreExitValue = false
 }

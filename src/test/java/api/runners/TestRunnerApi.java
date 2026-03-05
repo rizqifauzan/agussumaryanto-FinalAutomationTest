@@ -7,7 +7,6 @@ import static io.cucumber.junit.platform.engine.Constants.*;
 @Suite
 @IncludeEngines("cucumber")     // run the cucumber engine on JUnit Platform
 @SelectClasspathResource("features/api_features")   // feature folder is in src/test/resources/features
-@IncludeTags("api")     // only run scenarios tagged @api
 @ConfigurationParameter(
         key = GLUE_PROPERTY_NAME,
         value = "api.stepdefinitions"   // package step definition
@@ -15,13 +14,13 @@ import static io.cucumber.junit.platform.engine.Constants.*;
 @ConfigurationParameter(
         key = PLUGIN_PROPERTY_NAME,
         value = "pretty," +
-                "html:reports/cucumber-results/api_test_report.html," +
-                "json:reports/cucumber-results/api_test_report.json"
+                "html:build/reports/cucumber/api_test_report.html," +
+                "json:build/reports/cucumber/api_test_report.json"
 )
 
 @ConfigurationParameter(
         key = FILTER_TAGS_PROPERTY_NAME,
-        value = "not @exclude" // default filter, can be overridden with ./gradlew test -Dcucumber.filter.tags="@api"
+        value = "@api and not @exclude" // filter, can be overridden with ./gradlew test -Dcucumber.filter.tags="@api"
 )
 
 public class TestRunnerApi {

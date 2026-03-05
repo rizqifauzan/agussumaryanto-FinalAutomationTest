@@ -155,7 +155,7 @@ jobs:
           cp -r web-cucumber/* public/web/cucumber/ || true
           cp -r web-allure/* public/web/allure/ || true
 
-    # Deploy to GitHub Pages
+      # Deploy to GitHub Pages
       - name: Deploy report to Github Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v4.0.0

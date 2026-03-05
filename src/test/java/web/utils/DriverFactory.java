@@ -1,8 +1,9 @@
 package web.utils;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import java.time.Duration;
 
 public class DriverFactory {
@@ -11,24 +12,26 @@ public class DriverFactory {
 
     public static void initDriver() {
         String browser = ConfigReader.getProperty("browser");
-        switch (browser.toLowerCase()) {
-            case "chrome":
-                driver = new ChromeDriver();
-                break;
-            case "firefox":
-                driver = new FirefoxDriver();
-                break;
-            default:
-                throw new RuntimeException("Browser not supported: " + browser);
+        // Set implicit wait from config
+        int implicitWait = Integer.parseInt(ConfigReader.getProperty("implicitWait"));
+        if (browser.equalsIgnoreCase("chrome")) {
+            WebDriverManager.chromedriver().setup();
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless=new");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--window-size=1920,1080");
+            driver = new ChromeDriver(options);
+        } else {
+            throw new RuntimeException("Browser not supported: " + browser);
         }
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
+        driver.manage().window().maximize();
     }
 
     public static WebDriver getDriver() {
         if (driver == null) {
-            System.setProperty("webdriver.chrome.driver", "path/to/chromedriver.exe");
-            driver = new ChromeDriver();
-            driver.manage().window().maximize();
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            initDriver();
         }
         return driver;
     }

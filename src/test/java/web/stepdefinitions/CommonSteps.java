@@ -85,6 +85,7 @@ public class CommonSteps {
         loginPage.login("agussumaryanto", "agussumaryanto");
         // Optional: assertion to ensure login success
         homePage.getLoggedInUsername();
+        System.out.println("User logged in with successfully");
     }
 
     @When("the user clicks the logout button")
