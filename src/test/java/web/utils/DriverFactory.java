@@ -15,7 +15,7 @@ public class DriverFactory {
         // Set implicit wait from config
         int implicitWait = Integer.parseInt(ConfigReader.getProperty("implicitWait"));
         if (browser.equalsIgnoreCase("chrome")) {
-            WebDriverManager.chromedriver().setup();
+            WebDriverManager.chromedriver().clearDriverCache().setup();
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--headless=new");
             options.addArguments("--no-sandbox");
