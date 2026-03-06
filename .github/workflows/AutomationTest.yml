@@ -14,7 +14,7 @@ jobs:
   # =========================================
   # API & WEB AUTOMATION
   # =========================================
-  api-web-test:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -75,7 +75,7 @@ jobs:
   # =========================================
   deploy-report:
     runs-on: ubuntu-latest
-    needs: api-web-test
+    needs: test
     if: always()
 
     steps:
@@ -84,7 +84,7 @@ jobs:
 
      # Folder structure
       - name: Prepare Folder Structure
-        run:
+        run: |
           mkdir -p public/api
           mkdir -p public/web
           cp -r cucumber-api/* public/api/ || true
