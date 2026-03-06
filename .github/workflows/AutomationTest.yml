@@ -10,11 +10,16 @@ on:
 permissions:
   contents: write   # Moved to global level
 
+env:
+  JAVA_VERSION: 21
+  REPORT_DIR: public
+
 jobs:
   # =========================================
   # API & WEB AUTOMATION
   # =========================================
   test:
+    name: Run ${{ matrix.test-type }} Test
     runs-on: ubuntu-latest
 
     strategy:
@@ -30,7 +35,7 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: ${{env.JAVA_VERSION}}
           distribution: 'temurin'
           cache: gradle     # Cache gradle for speed
 
@@ -43,19 +48,19 @@ jobs:
         run: chmod +x gradlew
 
       # Execute the Gradle command for running tests
-      - name: Run API Test
-        if: matrix.test-type == 'api'
-        run: ./gradlew clean runApiTest --info --stacktrace
-
-      - name: Run Web Test
-        if: matrix.test-type == 'web'
-        run: ./gradlew clean runWebTest --info --stacktrace
+      - name: Execute Test Suite
+        run: |
+          if [ "${{ matrix.test-type }}" = "api" ]; then
+            ./gradlew clean runApiTest --info --stacktrace
+          else
+            ./gradlew clean runWebTest --info --stacktrace
+          fi
 
       - name: Generate Allure Report
         if: always()
         run: ./gradlew allureReport
 
-      # Archive API & Web Test Result
+      # Upload API & Web Report
       - name: Upload Cucumber Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -79,16 +84,27 @@ jobs:
     if: always()
 
     steps:
+     # Download artifacts
       - name: Download Artifacts
         uses: actions/download-artifact@v4
+        with:
+          path: artifacts   # all artifacts go into this folder
 
      # Folder structure
       - name: Prepare Folder Structure
         run: |
-          mkdir -p public/api
-          mkdir -p public/web
-          cp -r cucumber-api/* public/api/ || true
-          cp -r cucumber-web/* public/web/ || true
+          mkdir -p $REPORT_DIR/api
+          mkdir -p $REPORT_DIR/web
+          mkdir -p $REPORT_DIR/allure-api
+          mkdir -p $REPORT_DIR/allure-web
+          
+          # copy cucumber report
+          cp -r artifacts/cucumber-api/* $REPORT_DIR/api/ || true
+          cp -r artifacts/cucumber-web/* $REPORT_DIR/web/ || true
+          
+          # copy allure report
+          cp -r artifacts/allure-api/* $REPORT_DIR/allure-api/ || true
+          cp -r artifacts/allure-web/* $REPORT_DIR/allure-web/ || true
 
      # Deploy to GitHub Pages
       - name: Deploy report to Github Pages
@@ -96,4 +112,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN}}
-          publish_dir: public
+          publish_dir: ${{ env.REPORT_DIR }}
