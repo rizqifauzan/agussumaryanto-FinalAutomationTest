@@ -18,6 +18,7 @@ public class CartPage extends BasePage {
     // VALIDATE CART PAGE
     // =========================
     public boolean isOnCartPage() {
+        waitHelper.waitForPageLoad();
         return waitHelper.waitForVisibility(cartTitle).isDisplayed();
     }
 

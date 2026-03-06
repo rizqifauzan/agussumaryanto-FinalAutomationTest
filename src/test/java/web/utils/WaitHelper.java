@@ -22,6 +22,8 @@ public class WaitHelper {
 
     // Wait until element is visible
     public WebElement waitForVisibility(By locator) {
+        wait.ignoring(StaleElementReferenceException.class)
+                .ignoring(WebDriverException.class);
         return wait.until(
                 ExpectedConditions.visibilityOfElementLocated(locator)
         );
@@ -57,5 +59,15 @@ public class WaitHelper {
     // GENERIC WAIT UNTIL (FLEXIBLE)
     public void waitUntil(Function<? super WebDriver, Boolean> condition) {
         wait.until(condition);
+    }
+
+    // Wait page loaded
+    public void waitForPageLoad() {
+        wait.ignoring(WebDriverException.class)
+                .until(driver -> {
+                    Object state = ((JavascriptExecutor) driver)
+                            .executeScript("return document.readyState");
+                    return "complete".equals(state);
+                });
     }
 }
