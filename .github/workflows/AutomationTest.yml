@@ -44,7 +44,10 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
+
+      - name: Enable Gradle Wrapper
+        run: chmod +x gradlew
+
       - name: Run API Tests
         run: ./gradlew runApiTest
 
@@ -54,6 +57,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Enable Gradle Wrapper
+        run: chmod +x gradlew
         
       - name: Run Web Tests
         run: ./gradlew runWebTest --no-daemon -q
