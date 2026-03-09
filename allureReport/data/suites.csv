@@ -1,0 +1,64 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Mon Mar 09 19:31:37 UTC 2026","Mon Mar 09 19:31:37 UTC 2026","204","","DummyAPI.io API Testing","","Invalid API usage","","Invalid API usage","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"broken","Mon Mar 09 19:31:40 UTC 2026","Mon Mar 09 19:32:00 UTC 2026","19615","","Complete Purchase Flow","","User completes full purchase journey","","User completes full purchase journey","  As a new user
+  I want to complete a full purchase journey
+  So that I can register, login, buy a product, and logout successfully"
+"passed","Mon Mar 09 19:31:34 UTC 2026","Mon Mar 09 19:31:35 UTC 2026","752","","DummyAPI.io API Testing","","Update User","","Update User","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"passed","Mon Mar 09 19:32:06 UTC 2026","Mon Mar 09 19:32:10 UTC 2026","4251","","User Login","","Failed login - wrong password","","Failed login - wrong password","  As a registered user
+  I want to log in
+  So that I can access my account"
+"passed","Mon Mar 09 19:31:34 UTC 2026","Mon Mar 09 19:31:34 UTC 2026","178","","DummyAPI.io API Testing","","Create User","","Create User","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"passed","Mon Mar 09 19:33:20 UTC 2026","Mon Mar 09 19:33:22 UTC 2026","2392","","Product Management","","View product details","","View product details","  As a logged in user
+  I want to manage products
+  So that I can browse and shop items"
+"passed","Mon Mar 09 19:33:53 UTC 2026","Mon Mar 09 19:33:55 UTC 2026","1514","","User Signup","","Failed registration - empty field","","Failed registration - empty field","  As a visitor
+  I want to create an account
+  So that I can log in to the application"
+"passed","Mon Mar 09 19:33:47 UTC 2026","Mon Mar 09 19:33:49 UTC 2026","2032","","User Signup","","Successful registration","","Successful registration","  As a visitor
+  I want to create an account
+  So that I can log in to the application"
+"passed","Mon Mar 09 19:32:17 UTC 2026","Mon Mar 09 19:32:20 UTC 2026","2451","","User Logout","","Logout button not visible when user is not logged in","","Logout button not visible when user is not logged in","  As a logged in user
+  I want to log out
+  So that my session ends securely"
+"passed","Mon Mar 09 19:31:37 UTC 2026","Mon Mar 09 19:31:37 UTC 2026","134","","DummyAPI.io API Testing","","Create User with invalid body","","Create User with invalid body","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"passed","Mon Mar 09 19:32:00 UTC 2026","Mon Mar 09 19:32:06 UTC 2026","6491","","User Login","","Successful login","","Successful login","  As a registered user
+  I want to log in
+  So that I can access my account"
+"passed","Mon Mar 09 19:33:22 UTC 2026","Mon Mar 09 19:33:25 UTC 2026","2975","","Product Management","","Add product to cart","","Add product to cart","  As a logged in user
+  I want to manage products
+  So that I can browse and shop items"
+"passed","Mon Mar 09 19:32:14 UTC 2026","Mon Mar 09 19:32:17 UTC 2026","2957","","User Logout","","Successful logout","","Successful logout","  As a logged in user
+  I want to log out
+  So that my session ends securely"
+"passed","Mon Mar 09 19:32:49 UTC 2026","Mon Mar 09 19:33:18 UTC 2026","28771","","Checkout and Payment","","Payment with missing required fields","","Payment with missing required fields","  As a logged in user
+  I want to complete checkout
+  So that I can purchase products"
+"passed","Mon Mar 09 19:33:25 UTC 2026","Mon Mar 09 19:33:28 UTC 2026","3039","","Product Management","","Add product to cart","","Add product to cart","  As a logged in user
+  I want to manage products
+  So that I can browse and shop items"
+"passed","Mon Mar 09 19:31:37 UTC 2026","Mon Mar 09 19:31:37 UTC 2026","127","","DummyAPI.io API Testing","","Create User with invalid body","","Create User with invalid body","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"passed","Mon Mar 09 19:33:28 UTC 2026","Mon Mar 09 19:33:47 UTC 2026","18575","","Product Management","","Remove product from cart","","Remove product from cart","  As a logged in user
+  I want to manage products
+  So that I can browse and shop items"
+"passed","Mon Mar 09 19:31:37 UTC 2026","Mon Mar 09 19:31:38 UTC 2026","133","","DummyAPI.io API Testing","","Create User with invalid body","","Create User with invalid body","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"passed","Mon Mar 09 19:31:34 UTC 2026","Mon Mar 09 19:31:34 UTC 2026","182","","DummyAPI.io API Testing","","Get User by ID","","Get User by ID","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"passed","Mon Mar 09 19:31:37 UTC 2026","Mon Mar 09 19:31:37 UTC 2026","153","","DummyAPI.io API Testing","","Invalid API usage","","Invalid API usage","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"passed","Mon Mar 09 19:31:32 UTC 2026","Mon Mar 09 19:31:34 UTC 2026","1878","","DummyAPI.io API Testing","","Get List of Users","","Get List of Users","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"passed","Mon Mar 09 19:31:36 UTC 2026","Mon Mar 09 19:31:36 UTC 2026","205","","DummyAPI.io API Testing","","Invalid API usage","","Invalid API usage","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"passed","Mon Mar 09 19:31:37 UTC 2026","Mon Mar 09 19:31:37 UTC 2026","138","","DummyAPI.io API Testing","","Create User with invalid body","","Create User with invalid body","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"passed","Mon Mar 09 19:33:18 UTC 2026","Mon Mar 09 19:33:20 UTC 2026","2179","","Product Management","","View products by category","","View products by category","  As a logged in user
+  I want to manage products
+  So that I can browse and shop items"
+"passed","Mon Mar 09 19:31:35 UTC 2026","Mon Mar 09 19:31:36 UTC 2026","770","","DummyAPI.io API Testing","","Get List of Tags","","Get List of Tags","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"passed","Mon Mar 09 19:32:10 UTC 2026","Mon Mar 09 19:32:14 UTC 2026","3886","","User Login","","Failed login - empty field","","Failed login - empty field","  As a registered user
+  I want to log in
+  So that I can access my account"
+"passed","Mon Mar 09 19:31:35 UTC 2026","Mon Mar 09 19:31:35 UTC 2026","357","","DummyAPI.io API Testing","","Delete User","","Delete User","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"passed","Mon Mar 09 19:31:37 UTC 2026","Mon Mar 09 19:31:37 UTC 2026","127","","DummyAPI.io API Testing","","Invalid API usage","","Invalid API usage","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"passed","Mon Mar 09 19:31:36 UTC 2026","Mon Mar 09 19:31:37 UTC 2026","130","","DummyAPI.io API Testing","","Invalid API usage","","Invalid API usage","  Testing DummyAPI.io endpoints with valid and invalid cases"
+"passed","Mon Mar 09 19:32:20 UTC 2026","Mon Mar 09 19:32:49 UTC 2026","29448","","Checkout and Payment","","Successful payment","","Successful payment","  As a logged in user
+  I want to complete checkout
+  So that I can purchase products"
+"passed","Mon Mar 09 19:33:49 UTC 2026","Mon Mar 09 19:33:53 UTC 2026","3985","","User Signup","","Failed registration - duplicate username","","Failed registration - duplicate username","  As a visitor
+  I want to create an account
+  So that I can log in to the application"
