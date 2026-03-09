@@ -12,7 +12,7 @@ permissions:
 
 env:
   JAVA_VERSION: 21
-  REPORT_DIR: FinalAutomationTest/reports # folder report in repo
+  REPORT_DIR: reports # folder report in repo
 
 jobs:
   # =========================================
@@ -102,7 +102,7 @@ jobs:
           cp -r artifacts/cucumber-api/* $REPORT_DIR/api/ || true
           cp -r artifacts/cucumber-web/* $REPORT_DIR/web/ || true
           
-          # copy allure report including the allure-report folder contents 
+          # copy allure report including the folder contents 
           cp -r artifacts/allure-api/allure-report/* $REPORT_DIR/allure-api/ || true
           cp -r artifacts/allure-web/allure-report/* $REPORT_DIR/allure-web/ || true
 
