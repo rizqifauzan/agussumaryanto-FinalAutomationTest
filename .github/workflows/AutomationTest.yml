@@ -40,7 +40,7 @@ jobs:
 
       # 6. run Web test
       - name: Run Web Test
-        run: ./gradlew runWebTest
+        run: ./gradlew runWebTest --no-daemon -q
 
       # 7. generate allure report
       - name: Generate Allure Report
