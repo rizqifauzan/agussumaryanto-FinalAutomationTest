@@ -1,4 +1,4 @@
-name: Automation Test + Allure Report
+name: Automation Test (API & Web)
 
 on:
   push:
@@ -10,6 +10,7 @@ permissions:
 
 env:
   JAVA_VERSION: 21
+  REPORT_DIR: site
 
 jobs:
 
@@ -18,11 +19,11 @@ jobs:
 
     steps:
 
-      # 1. checkout repository
+      # 1. Checkout repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. setup java
+      # 2. Setup Java
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -30,63 +31,57 @@ jobs:
           distribution: temurin
           cache: gradle
 
-      # 3. install chrome (for selenium)
+      # 3. Install Chrome (untuk Selenium)
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v2
 
-      # 4. make gradlew executable
-      - name: Setup Gradle
+      # 4. Enable gradlew
+      - name: Setup Gradle Wrapper
         run: chmod +x gradlew
 
-      # 5. run API automation
-      - name: Run API Test
+      # =========================
+      # RUN API TEST
+      # =========================
+
+      - name: Run API Automation Test
         run: ./gradlew runApiTest
 
-      # 6. run Web automation
-      - name: Run Web Test
+      - name: Generate API Allure Report
+        run: |
+          npx allure generate build/allure-results/api \
+          -o build/reports/allure-api --clean
+
+      # =========================
+      # RUN WEB TEST
+      # =========================
+
+      - name: Run Web Automation Test
         run: ./gradlew runWebTest
 
-      # 7. merge allure results
-      - name: Merge Allure Results
-        if: always()
+      - name: Generate Web Allure Report
         run: |
-          mkdir -p build/allure-results
-          cp -r build/allure-results/api/* build/allure-results/ || true
-          cp -r build/allure-results/web/* build/allure-results/ || true
+          npx allure generate build/allure-results/web \
+          -o build/reports/allure-web --clean
 
-      # 8. generate report
-      - name: Generate Allure Report
-        if: always()
-        run: ./gradlew allureReport
+      # =========================
+      # PREPARE DEPLOY FOLDER
+      # =========================
 
-      # 9. upload report
-      - name: Upload Allure Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report
-          path: build/reports/allure-report
+      - name: Prepare GitHub Pages Folder
+        run: |
+          mkdir -p $REPORT_DIR/api
+          mkdir -p $REPORT_DIR/web
 
+          cp -r build/reports/allure-api/* $REPORT_DIR/api/
+          cp -r build/reports/allure-web/* $REPORT_DIR/web/
 
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    if: always()
-
-    steps:
-
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Download Report
-        uses: actions/download-artifact@v4
-        with:
-          name: allure-report
-          path: site
+      # =========================
+      # DEPLOY
+      # =========================
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: site
+          publish_dir: ${{ env.REPORT_DIR }}
           publish_branch: gh-pages
