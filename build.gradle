@@ -136,3 +136,19 @@ tasks.register("runWebTest", JavaExec) {
     // to get test fail -> CI fail
     ignoreExitValue = false
 }
+
+tasks.register("allureApiReport", Exec) {
+    commandLine "allure", "generate",
+            "build/allure-results/api",
+            "-o",
+            "build/reports/allure-api",
+            "--clean"
+}
+
+tasks.register("allureWebReport", Exec) {
+    commandLine "allure", "generate",
+            "build/allure-results/web",
+            "-o",
+            "build/reports/allure-web",
+            "--clean"
+}
