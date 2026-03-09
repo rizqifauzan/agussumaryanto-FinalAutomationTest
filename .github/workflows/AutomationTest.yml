@@ -12,7 +12,7 @@ permissions:
 
 env:
   JAVA_VERSION: 21
-  REPORT_DIR: reports # folder report in repo
+  REPORT_DIR: reports # folder report in gh-pages branch
 
 jobs:
   # =========================================
@@ -113,8 +113,12 @@ jobs:
           cp -r artifacts/cucumber-web/* $REPORT_DIR/web/ || true
           
           # copy allure report including the folder contents 
-          cp -r artifacts/allure-api/* $REPORT_DIR/allure-api/ || true
-          cp -r artifacts/allure-web/* $REPORT_DIR/allure-web/ || true
+          cp -r artifacts/allure-api/allureReport/* $REPORT_DIR/allure-api/ || true
+          cp -r artifacts/allure-web/allureReport/* $REPORT_DIR/allure-web/ || true
+
+      # Important for GitHub pages static assets
+      - name: Disable Jekyll
+        run: touch $REPORT_DIR/.nojekyll
 
      # Deploy to GitHub Pages
       - name: Deploy report to Github Pages
