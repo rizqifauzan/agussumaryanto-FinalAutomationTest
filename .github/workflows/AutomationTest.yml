@@ -84,8 +84,7 @@ jobs:
     if: always()
 
     steps:
-      # Download (clone) repository to the GitHub Actions runner
-      # -> so that the workflow can access the project files
+      # Mandatory for workspace repo to be available
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -94,6 +93,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts   # all artifacts go into this folder
+
+      # Debug to know the structure of the artifact
+      - name: Debug Artifact Structure
+        run: |
+          echo "=== ARTIFACT STRUCTURE ==="
+          ls -R artifacts
 
      # Folder structure
       - name: Prepare Folder Structure
@@ -108,8 +113,8 @@ jobs:
           cp -r artifacts/cucumber-web/* $REPORT_DIR/web/ || true
           
           # copy allure report including the folder contents 
-          cp -r artifacts/allure-api/allure-report/* $REPORT_DIR/allure-api/ || true
-          cp -r artifacts/allure-web/allure-report/* $REPORT_DIR/allure-web/ || true
+          cp -r artifacts/allure-api/* $REPORT_DIR/allure-api/ || true
+          cp -r artifacts/allure-web/* $REPORT_DIR/allure-web/ || true
 
      # Deploy to GitHub Pages
       - name: Deploy report to Github Pages
