@@ -1,29 +1,24 @@
-name: Automation Test (API & Web)
+name: Automation Test
 
 on:
   push:
     branches: ["main"]
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 env:
   JAVA_VERSION: 21
-  REPORT_DIR: site
 
 jobs:
-
   test:
     runs-on: ubuntu-latest
 
     steps:
 
-      # 1. Checkout repository
+      # 1. checkout repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Setup Java
+      # 2. setup java
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -31,57 +26,31 @@ jobs:
           distribution: temurin
           cache: gradle
 
-      # 3. Install Chrome (untuk Selenium)
+      # 3. install chrome (for selenium)
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v2
 
-      # 4. Enable gradlew
-      - name: Setup Gradle Wrapper
+      # 4. enable gradlew
+      - name: Setup Gradle
         run: chmod +x gradlew
 
-      # =========================
-      # RUN API TEST
-      # =========================
-
-      - name: Run API Automation Test
+      # 5. run API test
+      - name: Run API Test
         run: ./gradlew runApiTest
 
-      - name: Generate API Allure Report
-        run: |
-          npx allure generate build/allure-results/api \
-          -o build/reports/allure-api --clean
-
-      # =========================
-      # RUN WEB TEST
-      # =========================
-
-      - name: Run Web Automation Test
+      # 6. run Web test
+      - name: Run Web Test
         run: ./gradlew runWebTest
 
-      - name: Generate Web Allure Report
-        run: |
-          npx allure generate build/allure-results/web \
-          -o build/reports/allure-web --clean
+      # 7. generate allure report
+      - name: Generate Allure Report
+        if: always()
+        run: ./gradlew allureReport
 
-      # =========================
-      # PREPARE DEPLOY FOLDER
-      # =========================
-
-      - name: Prepare GitHub Pages Folder
-        run: |
-          mkdir -p $REPORT_DIR/api
-          mkdir -p $REPORT_DIR/web
-
-          cp -r build/reports/allure-api/* $REPORT_DIR/api/
-          cp -r build/reports/allure-web/* $REPORT_DIR/web/
-
-      # =========================
-      # DEPLOY
-      # =========================
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      # 8. upload report
+      - name: Upload Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ${{ env.REPORT_DIR }}
-          publish_branch: gh-pages
+          name: allure-report
+          path: build/reports/allure-report
