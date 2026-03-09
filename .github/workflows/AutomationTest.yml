@@ -9,45 +9,59 @@ env:
   JAVA_VERSION: 21
 
 jobs:
-  test:
+  setup:
     runs-on: ubuntu-latest
-
     steps:
-
-      # 1. checkout repository
       - name: Checkout Repository
         uses: actions/checkout@v4
-
-      # 2. setup java
+      
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: temurin
           cache: gradle
-
-      # 3. install chrome (for selenium)
+          
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v2
-
-      # 4. enable gradlew
-      - name: Setup Gradle
+      
+      - name: Enable Gradle Wrapper
         run: chmod +x gradlew
+      
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
-      # 5. run API test
-      - name: Run API Test
+  api_test:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Run API Tests
         run: ./gradlew runApiTest
 
-      # 6. run Web test
-      - name: Run Web Test
+  web_test:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Run Web Tests
         run: ./gradlew runWebTest --no-daemon -q
-
-      # 7. generate allure report
+      
       - name: Generate Allure Report
         if: always()
         run: ./gradlew allureReport
-
-      # 8. upload report
+        
       - name: Upload Allure Report
         if: always()
         uses: actions/upload-artifact@v4
