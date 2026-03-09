@@ -116,10 +116,6 @@ jobs:
           cp -r artifacts/allure-api/allureReport/* $REPORT_DIR/allure-api/ || true
           cp -r artifacts/allure-web/allureReport/* $REPORT_DIR/allure-web/ || true
 
-      # Important for GitHub pages static assets
-      - name: Disable Jekyll
-        run: touch $REPORT_DIR/.nojekyll
-
      # Deploy to GitHub Pages
       - name: Deploy report to Github Pages
         if: always()
