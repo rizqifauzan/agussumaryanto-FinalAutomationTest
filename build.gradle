@@ -4,6 +4,10 @@ plugins {
     id 'io.qameta.allure' version '3.0.0' // Add Allure plugin
 }
 
+allure {
+    version = '2.24.0'
+}
+
 group = 'com.example'
 version = '1.0-SNAPSHOT'
 
@@ -82,7 +86,7 @@ tasks.register('runApiTest', JavaExec) {
 
     systemProperties = [
             "allure.results.directory":
-                    layout.buildDirectory.dir("allure-results").get().asFile.absolutePath
+                    layout.buildDirectory.dir("allure-results/api").get().asFile.absolutePath
     ]
 
     // Run all features in the resources/api_features folder
@@ -112,7 +116,7 @@ tasks.register("runWebTest", JavaExec) {
 
     systemProperties = [
             "allure.results.directory":
-                    layout.buildDirectory.dir("allure-results").get().asFile.absolutePath
+                    layout.buildDirectory.dir("allure-results/web").get().asFile.absolutePath
     ]
 
     // Run all features in the resources/web_features folder
