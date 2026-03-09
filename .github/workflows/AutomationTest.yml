@@ -11,23 +11,24 @@ env:
 jobs:
   setup:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: temurin
           cache: gradle
-          
+
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v2
-      
+
       - name: Enable Gradle Wrapper
         run: chmod +x gradlew
-      
+
       - name: Cache Gradle Dependencies
         uses: actions/cache@v4
         with:
@@ -41,6 +42,7 @@ jobs:
   api_test:
     runs-on: ubuntu-latest
     needs: setup
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -50,27 +52,29 @@ jobs:
 
       - name: Run API Tests
         run: ./gradlew runApiTest
-               - name: Generate API Allure Report
-               if: always()
-               run: ./gradlew allureApiReport
 
-         - name: Upload API Allure Report
-           if: always()
-           uses: actions/upload-artifact@v4
-           with:
-             name: allure-api-report
-             path: build/reports/allure-api
+      - name: Generate API Allure Report
+        if: always()
+        run: ./gradlew allureApiReport
+
+      - name: Upload API Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-api-report
+          path: build/reports/allure-api
 
   web_test:
     runs-on: ubuntu-latest
     needs: setup
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Enable Gradle Wrapper
         run: chmod +x gradlew
-        
+
       - name: Run Web Tests
         run: ./gradlew runWebTest --no-daemon -q
 
