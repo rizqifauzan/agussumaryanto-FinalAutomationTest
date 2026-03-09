@@ -137,18 +137,12 @@ tasks.register("runWebTest", JavaExec) {
     ignoreExitValue = false
 }
 
-tasks.register("allureApiReport", Exec) {
-    commandLine "allure", "generate",
-            "build/allure-results/api",
-            "-o",
-            "build/reports/allure-api",
-            "--clean"
+tasks.register("allureApiReport", io.qameta.allure.gradle.report.AllureReportTask) {
+    resultsDir = file("build/allure-results/api")
+    reportDir = file("build/reports/allure-api")
 }
 
-tasks.register("allureWebReport", Exec) {
-    commandLine "allure", "generate",
-            "build/allure-results/web",
-            "-o",
-            "build/reports/allure-web",
-            "--clean"
+tasks.register("allureWebReport", io.qameta.allure.gradle.report.AllureReportTask) {
+    resultsDir = file("build/allure-results/web")
+    reportDir = file("build/reports/allure-web")
 }
