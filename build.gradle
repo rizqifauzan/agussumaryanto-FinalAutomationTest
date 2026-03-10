@@ -1,11 +1,9 @@
+import io.qameta.allure.gradle.report.AllureReportTask
+
 plugins {
     id 'java'
     id 'idea'
-    id 'io.qameta.allure' version '3.0.0' // Add Allure plugin
-}
-
-allure {
-    version = '2.24.0'
+    id 'io.qameta.allure' version '3.0.0'
 }
 
 group = 'com.example'
@@ -21,44 +19,66 @@ repositories {
     mavenCentral()
 }
 
+allure {
+    version = '2.24.0'
+}
+
 dependencies {
-    // JUnit Jupiter (JUnit 5) --> for writing and running tests in Java using the JUnit 5 platform
+
+    // =========================
+    // JUNIT
+    // =========================
     testImplementation platform("org.junit:junit-bom:6.0.3")
     testImplementation 'org.junit.jupiter:junit-jupiter:6.0.3'
     testImplementation 'org.junit.platform:junit-platform-suite:6.0.3'
 
-    // Cucumber (JVM + JUnit 5 + Cucumber 7)
-    // Framework used for software testing automation with a Behavior-Driven Development (BDD) approach
+
+    // =========================
+    // CUCUMBER
+    // =========================
     testImplementation 'io.cucumber:cucumber-java:7.30.0'
-    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.30.0' // cucumber integration to JUnit 5
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.30.0'
 
-    // RestAssured for API testing
+
+    // =========================
+    // REST ASSURED
+    // =========================
     testImplementation 'io.rest-assured:rest-assured:6.0.0'
-    testImplementation 'io.rest-assured:json-path:6.0.0' // extract information from API response in json format
-    testImplementation 'com.networknt:json-schema-validator:3.0.0' // validate API responses against schema files
-    testImplementation("tools.jackson.core:jackson-core:3.1.0") // parsing & generate for json-schema-validator
-    testImplementation 'commons-codec:commons-codec:1.21.0' // to solve vulnerabilities to fix security RestAssured
+    testImplementation 'io.rest-assured:json-path:6.0.0'
+    testImplementation 'com.networknt:json-schema-validator:3.0.0'
+    testImplementation 'commons-codec:commons-codec:1.21.0'
+    testImplementation("tools.jackson.core:jackson-core:3.1.0")
 
-    // Selenium for Web testing
-    testImplementation 'org.seleniumhq.selenium:selenium-java:4.41.0' // WebDriver
-    testImplementation 'io.github.bonigarcia:webdrivermanager:6.3.3' // WebDriver Manager (auto driver setup)
-    testImplementation("com.fasterxml.jackson.core:jackson-core:2.21.1") // parsing & generate for webdrivermanager
 
-    // Allure Cucumber adapter (optional, for a visually appealing allure report)
+    // =========================
+    // SELENIUM
+    // =========================
+    testImplementation 'org.seleniumhq.selenium:selenium-java:4.41.0'
+    testImplementation 'io.github.bonigarcia:webdrivermanager:6.3.3'
+
+
+    // =========================
+    // ALLURE
+    // =========================
     testImplementation 'io.qameta.allure:allure-cucumber7-jvm:2.25.0'
-    testImplementation 'io.qameta.allure:allure-junit5:2.27.0' // optional
+    testImplementation 'io.qameta.allure:allure-junit5:2.24.0'
 
-    // Logging & utilities
-    testImplementation 'org.assertj:assertj-core:3.27.7' // Assertions / logging
-    testImplementation 'ch.qos.logback:logback-classic:1.5.25' // Add a logger backend to your testRuntimeOnly
-    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2' // Jackson (optional for parsing JSON)
+
+    // =========================
+    // LOGGING & UTIL
+    // =========================
+    testImplementation 'org.assertj:assertj-core:3.27.7'
+    testImplementation 'ch.qos.logback:logback-classic:1.5.25'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
     testImplementation 'com.google.code.gson:gson:2.13.2'
     testImplementation 'org.apache.commons:commons-lang3:3.19.0'
     testImplementation 'commons-io:commons-io:2.20.0'
 }
 
+
 test {
-    useJUnitPlatform() // able to run using JUnit 5 + Cucumber 7
+    useJUnitPlatform()
+
     testLogging {
         events "PASSED", "FAILED", "SKIPPED"
         showStandardStreams = true
@@ -67,20 +87,22 @@ test {
 }
 
 
-// === Custom task for Cucumber CLI ===
+//////////////////////////////////////////////////////////////////
+// Dynamic Tag Support
+//////////////////////////////////////////////////////////////////
 
-// === Dynamic Tag Support ===
 def tags = (findProperty('tags') == null) ? 'not @exclude' : findProperty('tags') + ' and not @exclude'
 
-// Custom Task: Run API Tests
+
+//////////////////////////////////////////////////////////////////
+// API TEST TASK
+//////////////////////////////////////////////////////////////////
+
 tasks.register('runApiTest', JavaExec) {
+
     group = 'verification'
-    description = 'Run Cucumber test for API via CLI'
+    description = 'Run API Cucumber Test'
 
-    // In Gradle 6-7, it is necessary to use the old cucumberRuntime configuration.
-    //classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-
-    // In Gradle 8+, cucumberRuntime is no longer necessary, because the classpath can be directly retrieved
     classpath = sourceSets.test.runtimeClasspath
     mainClass.set("io.cucumber.core.cli.Main")
 
@@ -89,27 +111,35 @@ tasks.register('runApiTest', JavaExec) {
                     layout.buildDirectory.dir("allure-results/api").get().asFile.absolutePath
     ]
 
-    // Run all features in the resources/api_features folder
     args = [
             '--plugin', 'pretty',
             '--plugin', 'summary',
-            '--plugin', 'html:build/reports/cucumber/api_test_report.html', // cucumber report
-            '--plugin', 'json:build/reports/cucumber/api_test_report.json', // cucumber report
-            '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm', // build/allure-results->build/reports/
+            '--plugin', 'html:build/reports/cucumber/api_test_report.html',
+            '--plugin', 'json:build/reports/cucumber/api_test_report.json',
+            '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm',
+
             '--glue', 'api.stepdefinitions',
+
             'src/test/resources/features/api_features',
+
             '--tags', tags
     ]
+
     standardOutput = System.out
     errorOutput = System.err
-    // to get test fail -> CI fail
     ignoreExitValue = false
 }
 
-// === Custom Task: Run Web UI Tests ===
+
+
+//////////////////////////////////////////////////////////////////
+// WEB TEST TASK
+//////////////////////////////////////////////////////////////////
+
 tasks.register("runWebTest", JavaExec) {
+
     group = "verification"
-    description = "Run Cucumber test for Web via CLI"
+    description = "Run Web Cucumber Test"
 
     classpath = sourceSets.test.runtimeClasspath
     mainClass.set("io.cucumber.core.cli.Main")
@@ -119,30 +149,48 @@ tasks.register("runWebTest", JavaExec) {
                     layout.buildDirectory.dir("allure-results/web").get().asFile.absolutePath
     ]
 
-    // Run all features in the resources/web_features folder
     args = [
             '--plugin', 'pretty',
             '--plugin', 'summary',
-            '--plugin', 'html:build/reports/cucumber/webUi_test_report.html', // cucumber report
-            '--plugin', 'json:build/reports/cucumber/webUi_test_report.json', // cucumber report
-            '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm', // build/allure-results->build/reports/
+            '--plugin', 'html:build/reports/cucumber/web_test_report.html',
+            '--plugin', 'json:build/reports/cucumber/web_test_report.json',
+            '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm',
+
             '--glue', 'web.stepdefinitions',
             '--glue', 'web.hooks',
+
             'src/test/resources/features/web_features',
+
             '--tags', tags
     ]
+
     standardOutput = System.out
     errorOutput = System.err
-    // to get test fail -> CI fail
     ignoreExitValue = false
 }
 
-tasks.register("allureApiReport", io.qameta.allure.gradle.report.AllureReportTask) {
-    resultsDir = file("build/allure-results/api")
-    reportDir = file("build/reports/allure-api")
+
+
+tasks.register("allureApiReport") {
+
+    dependsOn "runApiTest"
+
+    doLast {
+        exec {
+            commandLine "bash", "-c",
+                    "allure generate build/allure-results/api -o build/reports/allure-api --clean"
+        }
+    }
 }
 
-tasks.register("allureWebReport", io.qameta.allure.gradle.report.AllureReportTask) {
-    resultsDir = file("build/allure-results/web")
-    reportDir = file("build/reports/allure-web")
+tasks.register("allureWebReport") {
+
+    dependsOn "runWebTest"
+
+    doLast {
+        exec {
+            commandLine "bash", "-c",
+                    "allure generate build/allure-results/web -o build/reports/allure-web --clean"
+        }
+    }
 }

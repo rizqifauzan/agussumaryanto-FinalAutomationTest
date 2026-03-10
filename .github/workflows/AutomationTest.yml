@@ -25,8 +25,11 @@ jobs:
 
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v2
+        
+      - name: Setup Firefox
+        uses: browser-actions/setup-firefox@v2
 
-      - name: Enable Gradle Wrapper
+      - name: Set Gradle Wrapper Permissions
         run: chmod +x gradlew
 
       - name: Cache Gradle Dependencies
@@ -47,11 +50,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Enable Gradle Wrapper
+      - name: Set Gradle Wrapper Permissions
         run: chmod +x gradlew
 
       - name: Run API Tests
         run: ./gradlew runApiTest
+
+      - name: Install Allure
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y allure
+
 
       - name: Generate API Allure Report
         if: always()
@@ -77,6 +86,11 @@ jobs:
 
       - name: Run Web Tests
         run: ./gradlew runWebTest --no-daemon -q
+
+      - name: Install Allure
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y allure
 
       - name: Generate Web Allure Report
         if: always()
