@@ -25,9 +25,6 @@ jobs:
 
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v2
-        
-      - name: Setup Firefox
-        uses: browser-actions/setup-firefox@v2
 
       - name: Set Gradle Wrapper Permissions
         run: chmod +x gradlew
